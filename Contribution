@@ -1,0 +1,555 @@
+# Contributing to n8n Local Setup Guide
+
+First off, thank you for considering contributing to this project!
+
+This guide helps people set up n8n locally on Linux systems, and your contributions can help make it even better.
+
+## Table of Contents
+
+- [How Can I Contribute?](#how-can-i-contribute)
+- [Reporting Bugs](#reporting-bugs)
+- [Suggesting Enhancements](#suggesting-enhancements)
+- [Pull Request Process](#pull-request-process)
+- [Style Guidelines](#style-guidelines)
+- [Testing Guidelines](#testing-guidelines)
+
+---
+
+## How Can I Contribute?
+
+### 1. **Report Issues**
+Found a bug or error in the guide? Let us know by opening an issue!
+
+### 2. **Improve Documentation**
+- Fix typos or grammatical errors
+- Add clarifications to confusing sections
+- Provide better explanations
+- Add screenshots or diagrams
+
+### 3. **Add New Content**
+- Support for additional Linux distributions
+- Alternative installation methods
+- Troubleshooting solutions
+- Performance optimization tips
+- Integration guides
+
+### 4. **Update Scripts**
+- Improve installation scripts
+- Add error handling
+- Support new versions of tools
+- Add new features
+
+---
+
+## Reporting Bugs
+
+Before creating a bug report, please check existing issues to avoid duplicates.
+
+**When reporting a bug, include:**
+
+1. **Linux Distribution & Version**
+   ```bash
+   cat /etc/os-release
+   ```
+
+2. **Installation Method Used**
+   - Docker
+   - NPM
+   - Desktop App
+
+3. **Steps to Reproduce**
+   - Detailed step-by-step description
+   - Commands you ran
+
+4. **Expected Behavior**
+   - What you expected to happen
+
+5. **Actual Behavior**
+   - What actually happened
+   - Error messages (full text)
+   - Screenshots if applicable
+
+6. **Logs**
+   ```bash
+   # For Docker
+   docker-compose logs n8n
+   
+   # For systemd
+   journalctl -u n8n-docker.service -n 50
+   ```
+
+7. **System Information**
+   ```bash
+   # Docker version
+   docker --version
+   docker-compose --version
+   
+   # System resources
+   free -h
+   df -h
+   ```
+
+**Example Bug Report:**
+
+```markdown
+## Bug: Docker installation fails on Ubuntu 20.04
+
+**Distribution:** Ubuntu 20.04.6 LTS
+
+**Installation Method:** Docker (using install-debian.sh)
+
+**Steps to Reproduce:**
+1. Run `bash install-debian.sh`
+2. Script fails at Step 3
+
+**Expected:** Docker installs successfully
+
+**Actual:** Error message:
+```
+E: Unable to locate package docker-ce
+```
+
+**Logs:**
+[Paste relevant logs here]
+
+**Additional Context:**
+Using default Ubuntu repositories, not added any PPAs.
+```
+
+---
+
+## Suggesting Enhancements
+
+Have an idea to make this guide better? We'd love to hear it!
+
+**When suggesting enhancements, include:**
+
+1. **Clear Description**
+   - What feature/improvement you're suggesting
+   - Why it would be useful
+
+2. **Use Cases**
+   - Real-world scenarios where this would help
+   - Who would benefit
+
+3. **Implementation Ideas**
+   - How it could be implemented (if you have ideas)
+   - Alternative approaches
+
+**Example Enhancement Suggestion:**
+
+```markdown
+## Feature: Add PostgreSQL Database Support
+
+**Description:**
+Add instructions and docker-compose configuration for using PostgreSQL instead of SQLite.
+
+**Use Case:**
+Users running n8n in production or with heavy workflows would benefit from PostgreSQL's better performance and reliability.
+
+**Implementation:**
+- Add optional PostgreSQL service to docker-compose.yml
+- Update environment variables
+- Add migration instructions
+- Document performance benefits
+
+**Benefits:**
+- Better performance for large workflows
+- More reliable for production use
+- Industry standard database
+```
+
+---
+
+## Pull Request Process
+
+### Before You Start
+
+1. **Check Existing PRs**
+   - Avoid duplicate work
+   - See if someone's already working on it
+
+2. **Discuss Major Changes**
+   - Open an issue first for big changes
+   - Get feedback before investing time
+
+### Creating a Pull Request
+
+1. **Fork the Repository**
+   ```bash
+   # Click "Fork" on GitHub, then clone your fork
+   git clone https://github.com/YOUR_USERNAME/n8n-local-setup.git
+   cd n8n-local-setup
+   ```
+
+2. **Create a Branch**
+   ```bash
+   # Use descriptive branch names
+   git checkout -b fix/ubuntu-22-docker-issue
+   # or
+   git checkout -b feature/add-fedora-support
+   # or
+   git checkout -b docs/improve-troubleshooting
+   ```
+
+3. **Make Your Changes**
+   - Follow the style guidelines (below)
+   - Test your changes thoroughly
+   - Update relevant documentation
+
+4. **Commit Your Changes**
+   ```bash
+   # Use clear, descriptive commit messages
+   git add .
+   git commit -m "Fix: Docker installation on Ubuntu 22.04
+   
+   - Updated repository URL
+   - Fixed GPG key import
+   - Added error handling for apt-key deprecation
+   
+   Fixes #123"
+   ```
+
+5. **Push to Your Fork**
+   ```bash
+   git push origin fix/ubuntu-22-docker-issue
+   ```
+
+6. **Create Pull Request**
+   - Go to GitHub and create a pull request
+   - Fill out the PR template
+   - Link related issues
+
+### PR Checklist
+
+Before submitting, ensure:
+
+- [ ] Code follows project style guidelines
+- [ ] Documentation is updated if needed
+- [ ] Tested on relevant Linux distributions
+- [ ] No merge conflicts with main branch
+- [ ] Commit messages are clear and descriptive
+- [ ] Screenshots/videos added for UI changes
+- [ ] Related issues are referenced
+
+### PR Template
+
+```markdown
+## Description
+Brief description of changes made.
+
+## Type of Change
+- [ ] Bug fix
+- [ ] New feature
+- [ ] Documentation update
+- [ ] Performance improvement
+- [ ] Other (please describe)
+
+## Tested On
+- [ ] Arch Linux / Garuda / Manjaro
+- [ ] Ubuntu 22.04+
+- [ ] Debian 11+
+- [ ] Other: _____________
+
+## Related Issues
+Fixes #(issue number)
+
+## Screenshots (if applicable)
+[Add screenshots here]
+
+## Additional Notes
+Any additional information or context.
+```
+
+---
+
+## Style Guidelines
+
+### Documentation Style
+
+#### Markdown Formatting
+
+- Use **clear headings** with proper hierarchy
+- Add **emoji** for visual markers (sparingly)
+- Use **code blocks** with language specification
+- Add **explanations** after commands
+- Use **tables** for comparisons
+- Include **examples** for clarity
+
+**Example:**
+
+```markdown
+### Step 1: Install Docker
+
+First, update your system:
+
+```bash
+# Update package database
+sudo apt update
+```
+
+**Explanation:** This ensures you have the latest package information.
+```
+
+#### Command Documentation
+
+Always include:
+1. **The command**
+2. **What it does**
+3. **Expected output** (when relevant)
+
+**Example:**
+
+```markdown
+```bash
+# Check Docker version
+docker --version
+
+# Expected output:
+# Docker version 24.0.7, build afdd53b
+```
+```
+
+#### Explanations
+
+- Use **simple language**
+- Explain **why**, not just **what**
+- Add **warnings** for destructive commands
+- Highlight **important notes**
+
+**Example:**
+
+```markdown
+**WARNING:** This command will delete all Docker containers!
+
+```bash
+docker rm -f $(docker ps -aq)
+```
+
+**Explanation:** The `-f` flag forces removal even if containers are running. Use with caution.
+```
+
+### Code Style (Shell Scripts)
+
+#### General Principles
+
+```bash
+#!/bin/bash
+
+# Use meaningful variable names
+DATABASE_NAME="n8n"  # Not: db="n8n"
+
+# Add comments for complex operations
+# Check if Docker is installed and running
+if command -v docker &> /dev/null; then
+    echo "Docker found"
+fi
+
+# Use error handling
+set -e  # Exit on error
+
+# Validate user input
+if [ -z "$1" ]; then
+    echo "Error: Missing required argument"
+    exit 1
+fi
+```
+
+#### Formatting
+
+- **Indentation:** 4 spaces (no tabs)
+- **Line length:** Maximum 100 characters
+- **Functions:** Lowercase with underscores
+- **Variables:** UPPERCASE for constants, lowercase for locals
+
+**Example:**
+
+```bash
+# Constants
+readonly INSTALL_DIR="$HOME/.n8n"
+readonly DEFAULT_PORT=5678
+
+# Function
+check_system_requirements() {
+    local min_ram=2048
+    local available_ram=$(free -m | awk '/^Mem:/{print $2}')
+    
+    if [ "$available_ram" -lt "$min_ram" ]; then
+        echo "Warning: Low RAM detected"
+        return 1
+    fi
+    return 0
+}
+```
+
+### Docker Compose Style
+
+```yaml
+version: '3.8'
+
+services:
+  n8n:
+    image: n8nio/n8n:latest
+    container_name: n8n
+    restart: unless-stopped
+    
+    # Group related configurations
+    ports:
+      - "5678:5678"
+    
+    # Use clear, categorized environment variables
+    environment:
+      # Authentication
+      - N8N_BASIC_AUTH_ACTIVE=true
+      - N8N_BASIC_AUTH_USER=admin
+      
+      # Server settings
+      - N8N_HOST=localhost
+      - N8N_PORT=5678
+    
+    # Volumes
+    volumes:
+      - ~/.n8n:/home/node/.n8n
+```
+
+---
+
+## Testing Guidelines
+
+### Before Submitting
+
+Test your changes on:
+
+1. **Clean Installation**
+   - Fresh VM or container
+   - No previous n8n installation
+
+2. **Multiple Distributions**
+   - At least one Arch-based
+   - At least one Debian-based
+
+3. **Different Scenarios**
+   - Fresh install
+   - Upgrade from previous version
+   - Configuration changes
+
+### Testing Checklist
+
+For **installation scripts**:
+
+- [ ] Runs without errors
+- [ ] Installs all dependencies
+- [ ] Starts n8n successfully
+- [ ] n8n accessible in browser
+- [ ] Auto-start works (if enabled)
+- [ ] Cleanup works properly
+
+For **documentation changes**:
+
+- [ ] All commands work as written
+- [ ] Links are not broken
+- [ ] Screenshots are up-to-date
+- [ ] Examples are accurate
+- [ ] Formatting renders correctly
+
+### Reporting Test Results
+
+Include in your PR:
+
+```markdown
+## Test Results
+
+### Tested On:
+- ✅ Ubuntu 22.04 LTS - Fresh install
+- ✅ Garuda Linux (latest) - Fresh install
+- ✅ Manjaro 23.1 - Upgrade scenario
+
+### Test Cases:
+1. ✅ Docker installation
+2. ✅ n8n starts successfully
+3. ✅ Web interface accessible
+4. ✅ Auto-start configured
+5. ✅ Sample workflow executes
+
+### Issues Found:
+None
+
+### Additional Notes:
+Tested with 4GB RAM, no issues.
+```
+
+---
+
+## Commit Message Guidelines
+
+### Format
+
+```
+<type>(<scope>): <subject>
+
+<body>
+
+<footer>
+```
+
+### Types
+
+- `feat`: New feature
+- `fix`: Bug fix
+- `docs`: Documentation changes
+- `style`: Formatting, missing semicolons, etc.
+- `refactor`: Code refactoring
+- `test`: Adding tests
+- `chore`: Maintenance tasks
+
+### Examples
+
+**Simple fix:**
+```
+fix(arch): correct pacman command syntax
+
+Fixed typo in pacman install command that was causing errors
+on fresh Arch installations.
+```
+
+**New feature:**
+```
+feat(docker): add PostgreSQL support
+
+- Added PostgreSQL service to docker-compose.yml
+- Updated environment variables
+- Added migration guide in README
+- Tested on Ubuntu 22.04 and Arch Linux
+
+Closes #45
+```
+
+**Documentation update:**
+```
+docs(troubleshooting): add common firewall issues
+
+Added section about UFW and firewalld configuration
+to help users with firewall-related connection issues.
+```
+
+---
+
+## Questions?
+
+If you have questions about contributing:
+
+1. **Check existing issues and PRs** - Your question might be answered
+2. **Open a Discussion** - For general questions
+3. **Open an Issue** - For specific problems
+4. **Tag maintainers** - We're here to help!
+
+---
+
+## Recognition
+
+All contributors will be:
+- Listed in the project README
+- Credited in release notes
+- Appreciated forever! ❤️
+
+Thank you for making this project better!
