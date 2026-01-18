@@ -1,0 +1,281 @@
+# Quick Start Guide
+
+**Get n8n running in under 5 minutes!**
+
+Choose your Linux distribution and follow the commands below.
+
+---
+
+## Arch-based Linux (Garuda, Manjaro, EndeavourOS)
+
+### One-Command Installation
+
+```bash
+bash <(curl -sL https://raw.githubusercontent.com/YOUR_USERNAME/n8n-local-setup/main/install-arch.sh)
+```
+
+### Manual Installation (Copy & Paste)
+
+```bash
+# Install Docker
+sudo pacman -Syu
+sudo pacman -S docker docker-compose
+sudo systemctl start docker
+sudo systemctl enable docker
+sudo usermod -aG docker $USER
+newgrp docker
+
+# Create n8n directory
+mkdir -p ~/.n8n && cd ~/.n8n
+
+# Create configuration
+cat > docker-compose.yml << 'EOF'
+version: '3.8'
+services:
+  n8n:
+    image: n8nio/n8n:latest
+    container_name: n8n
+    restart: unless-stopped
+    ports:
+      - "5678:5678"
+    environment:
+      - N8N_BASIC_AUTH_ACTIVE=true
+      - N8N_BASIC_AUTH_USER=admin
+      - N8N_BASIC_AUTH_PASSWORD=changeme123
+      - GENERIC_TIMEZONE=Asia/Kolkata
+    volumes:
+      - ~/.n8n:/home/node/.n8n
+EOF
+
+# Start n8n
+docker-compose up -d
+```
+
+**Access:** http://localhost:5678  
+**Login:** admin / changeme123
+
+---
+
+## Debian-based Linux (Ubuntu, Pop!_OS, Linux Mint)
+
+### One-Command Installation
+
+```bash
+bash <(curl -sL https://raw.githubusercontent.com/YOUR_USERNAME/n8n-local-setup/main/install-debian.sh)
+```
+
+### Manual Installation (Copy & Paste)
+
+```bash
+# Install Docker
+sudo apt update && sudo apt upgrade -y
+sudo apt install -y apt-transport-https ca-certificates curl gnupg lsb-release
+
+# Add Docker repository
+sudo mkdir -p /etc/apt/keyrings
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+# Install Docker
+sudo apt update
+sudo apt install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin docker-compose
+sudo systemctl start docker
+sudo systemctl enable docker
+sudo usermod -aG docker $USER
+newgrp docker
+
+# Create n8n directory
+mkdir -p ~/.n8n && cd ~/.n8n
+
+# Create configuration
+cat > docker-compose.yml << 'EOF'
+version: '3.8'
+services:
+  n8n:
+    image: n8nio/n8n:latest
+    container_name: n8n
+    restart: unless-stopped
+    ports:
+      - "5678:5678"
+    environment:
+      - N8N_BASIC_AUTH_ACTIVE=true
+      - N8N_BASIC_AUTH_USER=admin
+      - N8N_BASIC_AUTH_PASSWORD=changeme123
+      - GENERIC_TIMEZONE=America/New_York
+    volumes:
+      - ~/.n8n:/home/node/.n8n
+EOF
+
+# Start n8n
+docker-compose up -d
+```
+
+**Access:** http://localhost:5678  
+**Login:** admin / changeme123
+
+---
+
+## Verify Installation
+
+```bash
+# Check if n8n is running
+docker ps
+
+# View logs
+docker-compose logs -f
+```
+
+You should see:
+```
+✔ Container n8n  Started
+```
+
+---
+
+## Change Default Password
+
+**IMPORTANT:** Change the default password immediately!
+
+```bash
+# Edit configuration
+cd ~/.n8n
+nano docker-compose.yml
+
+# Change this line:
+- N8N_BASIC_AUTH_PASSWORD=changeme123
+# To something secure:
+- N8N_BASIC_AUTH_PASSWORD=YourSecurePassword123!
+
+# Save and restart
+docker-compose restart
+```
+
+---
+
+## Access from Other Devices
+
+To access n8n from your phone or other computers:
+
+```bash
+# Find your local IP
+ip addr show | grep "inet 192"
+# Example output: 192.168.1.100
+
+# Edit docker-compose.yml
+nano ~/.n8n/docker-compose.yml
+
+# Add these environment variables:
+- N8N_HOST=0.0.0.0
+- WEBHOOK_URL=http://192.168.1.100:5678/
+
+# Restart
+docker-compose restart
+```
+
+Access from any device: `http://192.168.1.100:5678`
+
+---
+
+## Your First Workflow
+
+1. **Open browser:** http://localhost:5678
+2. **Login** with your credentials
+3. **Click** "Add Workflow"
+4. **Add a Schedule Trigger:**
+   - Click the "+" button
+   - Select "Schedule Trigger"
+   - Set to run every 5 minutes
+5. **Add HTTP Request:**
+   - Click "+" after the trigger
+   - Select "HTTP Request"
+   - Method: GET
+   - URL: https://api.github.com/zen
+6. **Execute Workflow:** Click "Execute Workflow" button
+7. **Activate:** Toggle switch in top-right
+
+You should see the workflow execute successfully!
+
+---
+
+## Common Commands
+
+```bash
+# Start n8n
+cd ~/.n8n && docker-compose up -d
+
+# Stop n8n
+cd ~/.n8n && docker-compose down
+
+# Restart n8n
+cd ~/.n8n && docker-compose restart
+
+# View logs (live)
+cd ~/.n8n && docker-compose logs -f
+
+# Update n8n
+cd ~/.n8n && docker-compose pull && docker-compose up -d
+
+# Backup data
+tar -czf n8n-backup.tar.gz ~/.n8n
+```
+
+---
+
+## Troubleshooting
+
+### Can't access http://localhost:5678
+
+```bash
+# Check if n8n is running
+docker ps
+
+# Check logs
+cd ~/.n8n && docker-compose logs
+
+# Try restarting
+docker-compose restart
+```
+
+### Port 5678 already in use
+
+```bash
+# Find what's using the port
+sudo lsof -i :5678
+
+# Or use a different port
+nano ~/.n8n/docker-compose.yml
+# Change: "5679:5678" instead of "5678:5678"
+docker-compose up -d
+# Access via: http://localhost:5679
+```
+
+### Permission denied (Docker)
+
+```bash
+# Add user to docker group
+sudo usermod -aG docker $USER
+
+# Log out and back in, or run:
+newgrp docker
+```
+
+---
+
+## Next Steps
+
+- **Read the full guide:** [README.md](README.md)
+- **Learn n8n:** https://docs.n8n.io
+- **Browse workflows:** https://n8n.io/workflows
+- **Join community:** https://community.n8n.io
+
+---
+
+## Need Help?
+
+- **Found a bug?** [Open an issue](https://github.com/YOUR_USERNAME/n8n-local-setup/issues)
+- **Have a question?** [Start a discussion](https://github.com/YOUR_USERNAME/n8n-local-setup/discussions)
+- **Want more details?** Check the [full README](README.md)
+
+---
+
+**Made with ❤️ for the Linux community**
