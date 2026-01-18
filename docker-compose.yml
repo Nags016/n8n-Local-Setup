@@ -1,0 +1,127 @@
+version: '3.8'
+
+services:
+  n8n:
+    image: n8nio/n8n:latest
+    container_name: n8n
+    restart: unless-stopped
+    
+    ports:
+      - "5678:5678"
+    
+    environment:
+      # ============================================
+      # AUTHENTICATION SETTINGS
+      # ============================================
+      # Enable basic authentication (recommended)
+      - N8N_BASIC_AUTH_ACTIVE=true
+      - N8N_BASIC_AUTH_USER=admin
+      - N8N_BASIC_AUTH_PASSWORD=changeme123  #  CHANGE THIS PASSWORD!
+      
+      # ============================================
+      # SERVER SETTINGS
+      # ============================================
+      - N8N_HOST=localhost
+      - N8N_PORT=5678
+      - N8N_PROTOCOL=http
+      
+      # Webhook URL (change if accessing from other devices)
+      - WEBHOOK_URL=http://localhost:5678/
+      
+      # ============================================
+      # TIMEZONE SETTINGS
+      # ============================================
+      # Change to your timezone (examples below)
+      - GENERIC_TIMEZONE=Asia/Kolkata
+      # America/New_York
+      # Europe/London
+      # Asia/Tokyo
+      # Australia/Sydney
+      
+      # ============================================
+      # DATA MANAGEMENT
+      # ============================================
+      # Automatically delete old execution data
+      - EXECUTIONS_DATA_PRUNE=true
+      
+      # Keep execution data for 7 days (168 hours)
+      - EXECUTIONS_DATA_MAX_AGE=168
+      
+      # ============================================
+      # LOGGING SETTINGS
+      # ============================================
+      # Log level: error, warn, info, verbose, debug
+      - N8N_LOG_LEVEL=info
+      - N8N_LOG_OUTPUT=console,file
+      
+      # ============================================
+      # PERFORMANCE SETTINGS
+      # ============================================
+      # Enable metrics endpoint (optional)
+      - N8N_METRICS=false
+      
+      # Maximum payload size (in MB)
+      - N8N_PAYLOAD_SIZE_MAX=16
+    
+    volumes:
+      # Persist n8n data on host machine
+      - ~/.n8n:/home/node/.n8n
+      
+      # Optional: Mount custom nodes
+      # - ./custom-nodes:/home/node/.n8n/custom
+    
+    # ============================================
+    # RESOURCE LIMITS (Optional but Recommended)
+    # ============================================
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'        # Maximum CPU cores
+          memory: 1G         # Maximum memory
+        reservations:
+          cpus: '0.5'        # Minimum CPU cores
+          memory: 512M       # Minimum memory
+    
+    # ============================================
+    # HEALTH CHECK (Optional)
+    # ============================================
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:5678/healthz"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+# ============================================
+# NETWORKS (Optional - for advanced setups)
+# ============================================
+# networks:
+#   n8n-network:
+#     driver: bridge
+
+# ============================================
+# ADDITIONAL SERVICES (Optional)
+# ============================================
+# Add database for better performance (PostgreSQL)
+#
+# postgres:
+#   image: postgres:15
+#   container_name: n8n-postgres
+#   restart: unless-stopped
+#   environment:
+#     - POSTGRES_USER=n8n
+#     - POSTGRES_PASSWORD=n8n_password
+#     - POSTGRES_DB=n8n
+#   volumes:
+#     - n8n-postgres-data:/var/lib/postgresql/data
+#
+# volumes:
+#   n8n-postgres-data:
+#
+# Then add to n8n service environment:
+#   - DB_TYPE=postgresdb
+#   - DB_POSTGRESDB_HOST=postgres
+#   - DB_POSTGRESDB_PORT=5432
+#   - DB_POSTGRESDB_DATABASE=n8n
+#   - DB_POSTGRESDB_USER=n8n
+#   - DB_POSTGRESDB_PASSWORD=n8n_password
