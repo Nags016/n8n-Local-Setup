@@ -4,7 +4,7 @@
 # n8n Local Setup Script - Arch-based Linux
 # ============================================
 # For: Garuda, Manjaro, EndeavourOS, Arch
-# Author: Your Name
+# Author: Nagaraj Bhat
 # License: MIT
 # ============================================
 
